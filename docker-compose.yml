@@ -1,0 +1,10 @@
+version: '3'
+services:
+  directory-restructure:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./workspace:/Workspace/Users/tomoya-m@aicello.co.jp/20250529_ディレクトリー構成変更  # Databricksの環境に揃える。
+      - .:/workspace
+    command: sleep infinity
