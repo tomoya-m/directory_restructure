@@ -1,0 +1,2 @@
+# directory_restructure
+SCADAアーカイブファイルのディレクトリー構成を変更するプロジェクト
