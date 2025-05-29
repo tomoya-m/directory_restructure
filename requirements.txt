@@ -1,0 +1,5 @@
+azure-storage-file-datalake
+ipykernel
+pandas
+psycopg2-binary
+python-dotenv
