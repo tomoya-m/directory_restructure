@@ -3,6 +3,8 @@ import datetime
 import os
 from io import StringIO
 
+
+from azure.core.exceptions import ResourceNotFoundError
 from azure.storage.filedatalake import DataLakeServiceClient
 from dotenv import load_dotenv
 import pandas
@@ -63,8 +65,12 @@ class DirectoryRestructure:
         3. 移行後のコンテナーにCSVの内容を書き込む。
         """
         data = self.read_csv()
+        if data is None:
+            return
+
         prepped_data = self.rename_header(data=data)
         self.write_csv(data=prepped_data)
+
         return
 
 
@@ -84,8 +90,14 @@ class DirectoryRestructure:
         input_file_client = self.input_file_system_client.get_file_client(input_path)
 
         # 入力ファイルを読み込む。
-        download = input_file_client.download_file()
-        content = download.readall().decode("utf-8")
+        try:
+            download = input_file_client.download_file()
+            content = download.readall().decode("cp932")
+        except ResourceNotFoundError:
+            print(f"{self.target_date}分のファイルが存在しません。")
+        except UnicodeDecodeError:
+            download = input_file_client.download_file()
+            content = download.readall().decode("utf-8")
 
         reader = csv.reader(StringIO(content))
 
